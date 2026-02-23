@@ -46,9 +46,16 @@ def get_current_user(
                        (outside of testing), or the token cannot be decoded.
     """
 
-    # For testing or if no credentials provided, return a mock user or handle as needed
-    if os.getenv("TESTING") or not credentials:
+    # For testing, return a mock user if credentials are missing
+    if os.getenv("TESTING") and not credentials:
         return {"username": "testuser", "exp": None}
+
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     try:
         payload = jwt.decode(
