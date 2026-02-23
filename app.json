@@ -1,8 +1,8 @@
 {
   "name": "GenX FX Trading System",
   "description": "Advanced AI-Powered Forex Signal Generator for MT4/5 Expert Advisors",
-  "repository": "https://github.com/your-username/genx-fx-trading",
-  "logo": "https://raw.githubusercontent.com/your-username/genx-fx-trading/main/assets/logo.png",
+  "repository": "https://github.com/Mouy-leng/GenX_FX",
+  "logo": "https://raw.githubusercontent.com/Mouy-leng/GenX_FX/main/docs/images/system_update_20260204.jpg",
   "keywords": [
     "forex",
     "trading",
@@ -44,6 +44,10 @@
     "ENVIRONMENT": {
       "description": "Application environment",
       "value": "production"
+    },
+    "DATABASE_URL": {
+      "description": "URL for the database (e.g. postgres://...)",
+      "required": false
     }
   },
   "formation": {
@@ -52,10 +56,6 @@
       "size": "standard-1x"
     }
   },
-  "addons": [
-    "heroku-postgresql:essential-0",
-    "heroku-redis:mini"
-  ],
   "buildpacks": [
     {
       "url": "heroku/python"

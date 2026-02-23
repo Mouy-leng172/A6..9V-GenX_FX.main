@@ -13,6 +13,7 @@
     "server": "tsx --watch --env-file=.env services/server/index.ts",
     "python:dev": "uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload",
     "start": "concurrently \"tsx --env-file=.env services/server/index.ts\" \"uvicorn api.main:app --host 0.0.0.0 --port 8000\"",
+    "start:prod": "concurrently \"tsx services/server/index.ts\" \"uvicorn api.main:app --host 0.0.0.0 --port 8000\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
