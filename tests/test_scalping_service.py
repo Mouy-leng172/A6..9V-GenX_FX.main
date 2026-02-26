@@ -32,10 +32,10 @@ class TestScalpingService(unittest.TestCase):
         # Trend: Close > EMA20 > EMA50
         # Stoch: Cross Up (prev k < prev d, curr k > curr d) in Oversold (<20)
 
-        # Mock EMA return values (series)
+        # Mock EMA return values (numpy arrays - matching optimized service behavior)
         ema20_vals = np.full(100, 100.0)
         ema50_vals = np.full(100, 90.0)
-        mock_ema.side_effect = [pd.Series(ema20_vals), pd.Series(ema50_vals)]
+        mock_ema.side_effect = [ema20_vals, ema50_vals]
 
         # Mock Stoch return values
         k_vals = np.full(100, 10.0)
@@ -46,7 +46,7 @@ class TestScalpingService(unittest.TestCase):
         k_vals[-2] = 10.0
         d_vals[-2] = 15.0  # d stays same for simplicity
 
-        mock_stoch.return_value = (pd.Series(k_vals), pd.Series(d_vals))
+        mock_stoch.return_value = (k_vals, d_vals)
 
         # Adjust DF close price to be > EMA20 (100)
         self.df["close"] = 110.0
@@ -68,13 +68,13 @@ class TestScalpingService(unittest.TestCase):
         middle = np.full(100, 100.0)
         lower = np.full(100, 95.0)
         mock_bbands.return_value = (
-            pd.Series(upper),
-            pd.Series(middle),
-            pd.Series(lower),
+            upper,
+            middle,
+            lower,
         )
 
         rsi_vals = np.full(100, 75.0)
-        mock_rsi.return_value = pd.Series(rsi_vals)
+        mock_rsi.return_value = rsi_vals
 
         # High >= Upper
         self.df["high"] = 106.0
@@ -99,7 +99,7 @@ class TestScalpingService(unittest.TestCase):
         # Price > EMA50, MACD Hist Cross Up 0
 
         ema50_vals = np.full(100, 90.0)
-        mock_ema.return_value = pd.Series(ema50_vals)
+        mock_ema.return_value = ema50_vals
 
         macd_line = np.zeros(100)
         signal_line = np.zeros(100)
@@ -110,9 +110,9 @@ class TestScalpingService(unittest.TestCase):
         hist[-1] = 0.5
 
         mock_macd.return_value = (
-            pd.Series(macd_line),
-            pd.Series(signal_line),
-            pd.Series(hist),
+            macd_line,
+            signal_line,
+            hist,
         )
 
         self.df["close"] = 95.0

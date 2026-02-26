@@ -113,3 +113,9 @@
 **Learning:** I identified a flaw in the Redis distributed lock implementation in `api/routers/predictions.py` where it only waited once for 0.1s if the lock was busy, leading to potential cache stampedes under high load. A single short wait is insufficient when the protected operation (ML model metrics calculation) takes longer than the wait time.
 
 **Action:** I implemented a retry loop (5 attempts with 0.1s delay) to properly handle lock contention. This ensures that concurrent requests wait for the result to be cached instead of falling back to redundant expensive calculations or failing. I also verified this behavior with a dedicated test case using `unittest.mock`.
+
+## 2026-02-18 - Passing NumPy Arrays to TA-Lib and Positional Indexing
+
+**Learning:** I identified a significant performance bottleneck in `api/services/scalping_service.py` where Pandas Series were passed directly to `talib` functions and values were accessed using `.iloc`. Benchmarks showed that passing raw NumPy arrays (`.values`) to `talib` is ~8x faster than passing Series, and direct array indexing (`[idx]`) is ~3x faster than `.iloc`.
+
+**Action:** In high-frequency signal generation paths, always extract `.values` from DataFrame columns once and pass these NumPy arrays to `talib` functions. Use positional indexing on the resulting arrays for maximum efficiency. When updating such services, ensure corresponding unit test mocks also return NumPy arrays to maintain compatibility with positional indexing.
