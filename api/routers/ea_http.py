@@ -5,8 +5,9 @@ Provides endpoints for EA registration, signal retrieval, heartbeat, and trade r
 
 import hashlib
 import logging
+from collections import deque
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Deque, Dict, List
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
@@ -20,8 +21,8 @@ router = APIRouter(prefix="", tags=["ea_http"])
 # In-memory storage for EA connections and signals
 # In production, this should use Redis or a database
 ea_connections: Dict[str, Dict[str, Any]] = {}
-pending_signals: List[Dict[str, Any]] = []
-trade_results: List[Dict[str, Any]] = []
+pending_signals: Deque[Dict[str, Any]] = deque()
+trade_results: Deque[Dict[str, Any]] = deque(maxlen=10000)
 
 
 def get_or_create_ea_id(data: Dict[str, Any]) -> str:
@@ -126,7 +127,7 @@ async def get_signal(api_key: str = Depends(validate_ea_api_key)):
         return {"type": "NO_SIGNAL", "message": "No pending signals"}
 
     # Get the oldest signal (FIFO)
-    signal = pending_signals.pop(0)
+    signal = pending_signals.popleft()
     logger.info(f"Signal retrieved by authenticated EA: {signal}")
 
     return {
@@ -397,7 +398,8 @@ async def get_trade_results(
         dict: Recent trade results
     """
     return {
-        "results": trade_results[-limit:],
+        # Convert deque to list for slicing
+        "results": list(trade_results)[-limit:],
         "total_count": len(trade_results),
         "timestamp": datetime.utcnow().isoformat(),
     }
