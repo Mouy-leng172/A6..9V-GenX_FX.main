@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
 import { RefreshCw, CheckCircle, AlertCircle } from 'lucide-react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
+import { Analytics } from '@vercel/analytics/react'
 import SystemTestResults from './components/SystemTestResults'
 import SystemStatus from './components/SystemStatus'
 import Billing from './pages/Billing';
@@ -202,6 +203,7 @@ function App() {
             <Route path="/billing" element={<Billing />} />
           </Routes>
         </main>
+        <Analytics />
         <SpeedInsights />
       </div>
     </Router>
