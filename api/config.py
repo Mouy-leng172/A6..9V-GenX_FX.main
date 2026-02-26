@@ -1,7 +1,7 @@
 import os
 from typing import Literal, Optional
 
-from pydantic import ConfigDict, Field, field_validator
+from pydantic import ConfigDict, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings
 
 
@@ -272,10 +272,6 @@ class Settings(BaseSettings):
         return f"{self.EA_SERVER_HOST}:{self.EA_SERVER_PORT}"
 
 
-# Create global settings instance
-settings = Settings()
-
-
 # Optional: Environment-specific settings
 class DevelopmentSettings(Settings):
     """Settings for development environment."""
@@ -290,6 +286,32 @@ class ProductionSettings(Settings):
     DEBUG: bool = False
     LOG_LEVEL: str = "WARNING"
 
+    @model_validator(mode="after")
+    def validate_production_security(self) -> "ProductionSettings":
+        """
+        Validates critical security settings for production environment.
+        Ensures default secrets are not used.
+        """
+        # Check SECRET_KEY
+        if self.SECRET_KEY == "default_secret_key":
+            raise ValueError(
+                "SECRET_KEY must be changed from default in production environment"
+            )
+
+        # Check other critical secrets
+        insecure_defaults = [
+            ("EXNESS_LOGIN", "default_login"),
+            ("EXNESS_PASSWORD", "default_password"),
+        ]
+
+        for field_name, default_val in insecure_defaults:
+            if getattr(self, field_name) == default_val:
+                raise ValueError(
+                    f"{field_name} must be changed from default in production environment"
+                )
+
+        return self
+
 
 # Factory function to get appropriate settings
 def get_settings() -> Settings:
@@ -303,3 +325,7 @@ def get_settings() -> Settings:
     if env == "production":
         return ProductionSettings()
     return DevelopmentSettings()
+
+
+# Create global settings instance
+settings = get_settings()
