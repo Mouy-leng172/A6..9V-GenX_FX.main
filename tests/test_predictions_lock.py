@@ -1,10 +1,9 @@
 import json
+import os
 from unittest.mock import AsyncMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
-
-import os
 
 # Set testing mode BEFORE importing app
 os.environ["TESTING"] = "1"
