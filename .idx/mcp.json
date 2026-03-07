@@ -5,6 +5,16 @@
       "args": [
         "chrome-devtools-mcp@latest"
       ]
+    },
+    "firebase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "firebase-tools@latest",
+        "experimental:mcp",
+        "--only",
+        "auth,firestore"
+      ]
     }
   }
 }
