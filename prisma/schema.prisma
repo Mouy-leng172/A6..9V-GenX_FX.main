@@ -27,3 +27,12 @@ model Channel {
   title String
   videos Video[]
 }
+
+model Applet {
+  id              String    @id @default(cuid())
+  name            String
+  description     String
+  firstAccessTime DateTime
+  lastAccessTime  DateTime
+  source          Json
+}

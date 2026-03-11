@@ -78,8 +78,9 @@ async function getCommits(username: string, repoName: string): Promise<Commit[]>
 }
 
 async function main() {
-  console.log(`Syncing logs for GitHub account: ${USERNAME}`);
-  let repos = await getRepos(USERNAME);
+  const username = process.argv[2] || USERNAME;
+  console.log(`Syncing logs for GitHub account: ${username}`);
+  let repos = await getRepos(username);
   if (!repos || repos.length === 0) {
     console.log('No repositories found or error occurred.');
     return;
@@ -89,27 +90,27 @@ async function main() {
 
   repos.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
 
-  let content = `# Update Log for ${USERNAME}\\n\\n`;
+  let content = `# Update Log for ${username}\n\n`;
   const now = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
-  content += `Generated on: ${now}\\n\\n`;
+  content += `Generated on: ${now}\n\n`;
 
   for (const repo of repos) {
     const repoName = repo.name;
     console.log(`Fetching logs for ${repoName}...`);
-    content += `## [${repoName}](${repo.html_url})\\n`;
-    content += `${repo.description || 'No description provided.'}\\n\\n`;
+    content += `## [${repoName}](${repo.html_url})\n`;
+    content += `${repo.description || 'No description provided.'}\n\n`;
 
-    const commits = await getCommits(USERNAME, repoName);
+    const commits = await getCommits(username, repoName);
     if (!commits || commits.length === 0) {
-      content += `*No commits found (empty repository or error).*\\n\\n`;
+      content += `*No commits found (empty repository or error).*\n\n`;
     } else {
       for (const commit of commits) {
         const sha = commit.sha.substring(0, 7);
-        const message = commit.commit.message.split('\\n')[0];
+        const message = commit.commit.message.split('\n')[0];
         const date = commit.commit.author.date;
-        content += `- \`${sha}\`: ${message} (${date})\\n`;
+        content += `- \`${sha}\`: ${message} (${date})\n`;
       }
-      content += `\\n`;
+      content += `\n`;
     }
   }
   await writeFile(OUTPUT_FILE, content);
