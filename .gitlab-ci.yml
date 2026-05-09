@@ -1,6 +1,7 @@
 stages:
   - build
   - push
+  - launch-trade
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -33,4 +34,41 @@ push:
     - docker push keamouyleng/genx_docker:latest
   only:
     - main
-    - master 
+    - master
+
+launch-trade:
+  stage: launch-trade
+  image: python:3.10
+  script:
+    - echo "Launching GOLD trade..."
+    - pip install requests
+    - |
+      python -c "
+      import requests
+      import time
+      url = 'http://$API_HOST:8000/api/v1/send_signal'
+      headers = {'X-API-Key': '$API_KEY'}
+      data = {
+          'action': 'BUY',
+          'symbol': 'XAUUSD',
+          'entry': 2650.0,
+          'stop_loss': 2630.0,
+          'take_profit': 2680.0,
+          'lot_size': 0.05,
+          'confidence': 90,
+          'timestamp': time.strftime('%Y-%m-%dT%H:%M:%S')
+      }
+      try:
+          response = requests.post(url, json=data, headers=headers, timeout=10)
+          print('Response:', response.status_code, response.text)
+          if response.status_code == 200:
+              print('Successfully sent XAUUSD trade signal via GitLab CI!')
+          else:
+              print('Failed to send signal.')
+      except Exception as e:
+          print('Connection failed:', str(e))
+          print('Note: The trading backend must be accessible from GitLab runners.')
+      "
+  only:
+    - triggers
+    - web
