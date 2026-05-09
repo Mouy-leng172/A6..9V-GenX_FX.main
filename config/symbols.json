@@ -1,0 +1,78 @@
+{
+  "levels": {
+    "beginner": ["EUR/USD", "USD/JPY"],
+    "intermediate": ["GBP/USD"],
+    "advanced": ["XAU/USD", "BTC/USD", "NAS100"]
+  },
+  "symbols": {
+    "EUR/USD": {
+      "name": "EUR/USD",
+      "type": "forex",
+      "spread_quality": "tight",
+      "liquidity": "high",
+      "volatility": "stable",
+      "best_sessions": ["London", "New York"],
+      "recommended_for": "beginners"
+    },
+    "USD/JPY": {
+      "name": "USD/JPY",
+      "type": "forex",
+      "spread_quality": "tight",
+      "liquidity": "high",
+      "volatility": "stable trends",
+      "best_sessions": ["Tokyo"],
+      "recommended_for": "beginners"
+    },
+    "GBP/USD": {
+      "name": "GBP/USD",
+      "type": "forex",
+      "spread_quality": "moderate",
+      "liquidity": "high",
+      "volatility": "high",
+      "best_sessions": ["London"],
+      "recommended_for": "intermediate"
+    },
+    "XAU/USD": {
+      "name": "XAU/USD",
+      "type": "commodity",
+      "spread_quality": "variable",
+      "liquidity": "very high",
+      "volatility": "huge",
+      "best_sessions": ["New York"],
+      "recommended_for": "advanced",
+      "notes": "Fast stop hunts, emotionally difficult. Strict risk management required."
+    },
+    "BTC/USD": {
+      "name": "BTC/USD",
+      "type": "crypto",
+      "spread_quality": "variable",
+      "liquidity": "moderate",
+      "volatility": "unpredictable spikes",
+      "best_sessions": ["24/7"],
+      "recommended_for": "advanced",
+      "notes": "Liquidation risk, exchange latency."
+    },
+    "NAS100": {
+      "name": "NAS100",
+      "type": "index",
+      "spread_quality": "moderate",
+      "liquidity": "high",
+      "volatility": "high",
+      "best_sessions": ["New York"],
+      "recommended_for": "advanced",
+      "notes": "Dangerous during news."
+    }
+  },
+  "strategies": {
+    "scalping": {
+      "components": [
+        "Trend filter",
+        "Liquidity session",
+        "Pullback entry",
+        "Tight stop",
+        "Partial take profit",
+        "Trailing stop"
+      ]
+    }
+  }
+}
