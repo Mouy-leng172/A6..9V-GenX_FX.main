@@ -18,12 +18,12 @@
   },
   
   "risk_management": {
-    "max_risk_per_trade": 0.02,
-    "max_total_risk": 0.06,
+    "max_risk_per_trade": 0.01,
+    "max_total_risk": 0.03,
     "position_sizing_method": "fixed_fractional",
     "stop_loss_method": "atr_based",
     "take_profit_ratio": 2.0,
-    "trailing_stop_enabled": false,
+    "trailing_stop_enabled": true,
     "risk_reward_minimum": 1.5,
     "volatility_adjustment": true,
     "market_condition_adjustment": true
