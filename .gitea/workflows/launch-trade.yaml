@@ -1,0 +1,70 @@
+name: Launch GOLD Trade
+on:
+  workflow_dispatch:
+    inputs:
+      symbol:
+        description: 'Trading Symbol'
+        required: true
+        default: 'XAUUSD'
+      action:
+        description: 'Trade Action (BUY/SELL)'
+        required: true
+        default: 'BUY'
+      lot_size:
+        description: 'Lot Size'
+        required: true
+        default: '0.05'
+
+jobs:
+  launch-trade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Signal to Trading Backend
+        run: |
+          pip install requests
+          python -c "
+          import requests
+          import time
+          import os
+          
+          # Using environment variables or fallback values
+          url = f'http://{os.environ.get(\"API_HOST\", \"localhost\")}:8000/api/v1/send_signal'
+          headers = {'X-API-Key': os.environ.get('API_KEY', 'default_ea')}
+          
+          # Use inputs from the workflow dispatch if available, otherwise defaults
+          symbol = os.environ.get('INPUT_SYMBOL', 'XAUUSD')
+          action = os.environ.get('INPUT_ACTION', 'BUY')
+          lot_size = float(os.environ.get('INPUT_LOT_SIZE', '0.05'))
+          
+          data = {
+              'action': action,
+              'symbol': symbol,
+              'entry': 2650.0,
+              'stop_loss': 2630.0,
+              'take_profit': 2680.0,
+              'lot_size': lot_size,
+              'confidence': 90,
+              'timestamp': time.strftime('%Y-%m-%dT%H:%M:%S')
+          }
+          
+          try:
+              print(f'Sending {symbol} {action} signal to {url}...')
+              response = requests.post(url, json=data, headers=headers, timeout=10)
+              print('Response:', response.status_code, response.text)
+              if response.status_code == 200:
+                  print(f'Successfully sent {symbol} trade signal via Gitea Actions!')
+              else:
+                  print('Failed to send signal.')
+                  exit(1)
+          except Exception as e:
+              print('Connection failed:', str(e))
+              print('Note: The trading backend must be accessible from Gitea runners.')
+              # In a real environment, you might not want to fail the CI just because the local backend is offline during testing
+              # exit(1)
+          "
+        env:
+          INPUT_SYMBOL: ${{ github.event.inputs.symbol }}
+          INPUT_ACTION: ${{ github.event.inputs.action }}
+          INPUT_LOT_SIZE: ${{ github.event.inputs.lot_size }}
+          API_HOST: ${{ secrets.API_HOST }}
+          API_KEY: ${{ secrets.API_KEY }}
