@@ -1,5 +1,3 @@
----
-
 📖 Unified README – Jules / GenX FX
 
 🚀 Overview
