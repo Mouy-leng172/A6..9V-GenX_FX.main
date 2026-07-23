@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Jules Bot",
+      "name": "Run Jules Bot (Local)",
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/jules/main.py",
@@ -13,11 +13,43 @@
       }
     },
     {
-      "name": "Debug Jules Task Scheduler",
+      "name": "Debug Jules Task Scheduler (Local)",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/jules/scheduler.js",
       "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Attach Jules in Docker",
+      "type": "docker",
+      "request": "launch",
+      "platform": "python",
+      "python": {
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/usr/src/app"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Launch Jules in Docker",
+      "type": "docker",
+      "request": "launch",
+      "platform": "python",
+      "python": {
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/usr/src/app"
+          }
+        ]
+      },
+      "env": {
+        "JULES_MODE": "trading",
+        "JULES_CONFIG": "/usr/src/app/config/trading.json"
+      }
     }
   ]
 }
