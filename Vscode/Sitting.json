@@ -1,6 +1,11 @@
 {
-  "editor.fontSize": 14,
+  "python.defaultInterpreterPath": "venv/bin/python",
   "editor.tabSize": 2,
-  "files.autoSave": "afterDelay",
-  "terminal.integrated.shell.linux": "/bin/bash"
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.log": true
+  },
+  "terminal.integrated.env.linux": {
+    "JULES_ENV": "development"
+  }
 }
