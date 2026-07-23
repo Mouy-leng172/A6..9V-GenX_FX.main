@@ -2,10 +2,21 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Node App",
+      "name": "Run Jules Bot",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/jules/main.py",
+      "console": "integratedTerminal",
+      "env": {
+        "JULES_MODE": "trading",
+        "JULES_CONFIG": "${workspaceFolder}/config/trading.json"
+      }
+    },
+    {
+      "name": "Debug Jules Task Scheduler",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/app.js",
+      "program": "${workspaceFolder}/jules/scheduler.js",
       "cwd": "${workspaceFolder}"
     }
   ]
