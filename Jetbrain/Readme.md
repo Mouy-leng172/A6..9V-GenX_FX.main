@@ -1,7 +1,5 @@
-📖 Unified README – Jules / GenX FX
 
-🚀 Overview
-Jules is a multi‑agent trading environment combining:
+##Jules is a multi‑agent trading environment combining:
 - Python FastAPI backend (trading bot, risk daemon)
 - Node.js scheduler for tasks
 - React dashboard for monitoring
