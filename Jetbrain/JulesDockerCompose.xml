@@ -1,0 +1,30 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Jules Docker Compose" type="DockerDeploymentConfigurationType" factoryName="Docker-Compose">
+    <deployment>
+      <!-- Path to your docker-compose.yml -->
+      <option name="composeFile" value="$PROJECT_DIR$/docker-compose.yml" />
+      <!-- Optional override for production -->
+      <option name="overrideFiles" value="$PROJECT_DIR$/docker-compose.prod.yml" />
+      <!-- Service to run -->
+      <option name="serviceName" value="jules" />
+      <!-- Container name -->
+      <option name="containerName" value="jules-container" />
+      <!-- Command to run inside container -->
+      <option name="command" value="python /usr/src/app/main.py" />
+      <!-- Environment variables -->
+      <envs>
+        <env name="JULES_MODE" value="trading" />
+        <env name="JULES_CONFIG" value="/usr/src/app/config/trading.json" />
+      </envs>
+    </deployment>
+  </configuration>
+
+  <configuration default="false" name="Agents Docker Compose" type="DockerDeploymentConfigurationType" factoryName="Docker-Compose">
+    <deployment>
+      <option name="composeFile" value="$PROJECT_DIR$/docker-compose.yml" />
+      <option name="serviceName" value="agents" />
+      <option name="containerName" value="agents-container" />
+      <option name="command" value="node /usr/src/app/orchestrator.js" />
+    </deployment>
+  </configuration>
+</component>
